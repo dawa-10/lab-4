@@ -4,20 +4,21 @@ import PostContainer from './PostContainer';
 import "../App.css"
 
 export default function FakeApiApp() {
+    const URL = " https://jsonplaceholder.typicode.com/posts";
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [newPost, setNewPost] = useState({ title: '', body: '' });
-
   useEffect(() => {
-    // Fetch initial data from the API
-    fetch('https://jsonplaceholder.typicode.com/posts')
-      .then((response) => response.json())
-      .then((posts) => {
-        setData(posts.reverse()); // Display in descending order
-        setLoading(false);
-      })
-      .catch((error) => console.error('Error fetching data:', error));
+    fetchPosts();
   }, []);
+
+  const fetchPosts = async () => {
+    const response = await fetch(URL);
+    const posts = await response.json();
+    setData((posts.reverse() ));
+    setIsLoading(false);
+  };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,7 +40,7 @@ export default function FakeApiApp() {
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
-      {loading ? <p>Loading...</p> : <PostContainer posts={data} />}
+      {isLoading ? <p>Loading...</p> : <PostContainer posts={data} />}
     </div>
   );
 }
